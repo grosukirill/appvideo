@@ -60,25 +60,25 @@ public class VideoServiceImpl implements VideoService {
     @Scheduled(fixedRate = 84600000)
     @Async
     public void scrapeVideos() {
-//        for (String url : this.urls) {
-//            if (url.contains("yaeby")) {
-//                extractVideoFromYaeby(url);
-//            }
-//            if (url.contains("sslkn")) {
-//                extractVideoFromSSLKN(url);
-//            }
-//        }
+        for (String url : this.urls) {
+            if (url.contains("yaeby")) {
+                extractVideoFromYaeby(url);
+            }
+            if (url.contains("sslkn")) {
+                extractVideoFromSSLKN(url);
+            }
+        }
     }
 
     @Scheduled(fixedRate = 84600000)
     @Async
     public void verifyAllVideos() {
-//        List<Video> videos = videoRepository.findAll();
-//        for (Video video : videos) {
-//            if (validateURL(video.getSdUrl()) || validateURL(video.getImageUrl()) || validateURL(video.getHdUrl()) || validateURL(video.getFullHdUrl())) {
-//                videoRepository.delete(video);
-//            }
-//        }
+        List<Video> videos = videoRepository.findAll();
+        for (Video video : videos) {
+            if (validateURL(video.getSdUrl()) || validateURL(video.getImageUrl()) || validateURL(video.getHdUrl()) || validateURL(video.getFullHdUrl())) {
+                videoRepository.delete(video);
+            }
+        }
     }
 
     @Override
