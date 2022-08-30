@@ -205,7 +205,7 @@ public class VideoServiceImpl implements VideoService {
         try {
             System.out.println("Started extracting from Yaeby.");
             ChromeDriverService chromeDriverService = new ChromeDriverService.Builder().build();
-            ChromeOptions chromeDriverOptions = new ChromeOptions().setHeadless(true).addArguments("--mute-audio").setLogLevel(ChromeDriverLogLevel.OFF);
+            ChromeOptions chromeDriverOptions = new ChromeOptions().setHeadless(true).addArguments("--disable-dev-shm-usage").addArguments("--disable-gpu").addArguments("--disable-extensions").addArguments("disable-infobars").addArguments("--no-sandbox").addArguments("--mute-audio").setLogLevel(ChromeDriverLogLevel.OFF);
             ChromeDriver driver = new ChromeDriver(chromeDriverService, chromeDriverOptions);
             WebDriverWait driverWait = new WebDriverWait(driver, Duration.ofMillis(4000L));
             Actions actions = new Actions(driver);
