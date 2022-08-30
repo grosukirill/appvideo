@@ -205,7 +205,7 @@ public class VideoServiceImpl implements VideoService {
         try {
             System.out.println("Started extracting from Yaeby.");
             ChromeDriverService chromeDriverService = new ChromeDriverService.Builder().build();
-            ChromeOptions chromeDriverOptions = new ChromeOptions().setHeadless(true).addArguments("--disable-dev-shm-usage").addArguments("--disable-extensions").addArguments("disable-infobars").addArguments("--no-sandbox").addArguments("--mute-audio").setLogLevel(ChromeDriverLogLevel.OFF);
+            ChromeOptions chromeDriverOptions = new ChromeOptions().addArguments("--no-sandbox").addArguments("--headless").addArguments("--disable-dev-shm-usage").addArguments("--disable-extensions").addArguments("disable-infobars").addArguments("--mute-audio").setLogLevel(ChromeDriverLogLevel.OFF);
             ChromeDriver driver = new ChromeDriver(chromeDriverService, chromeDriverOptions);
             WebDriverWait driverWait = new WebDriverWait(driver, Duration.ofMillis(4000L));
             Actions actions = new Actions(driver);
@@ -315,7 +315,7 @@ public class VideoServiceImpl implements VideoService {
             System.out.println("Started extracting from SSLKN.");
             for (int i = 1; i <= 10; i++) {
                 ChromeDriverService chromeDriverService = new ChromeDriverService.Builder().build();
-                ChromeOptions chromeDriverOptions = new ChromeOptions().setHeadless(true).addArguments("--disable-dev-shm-usage").addArguments("--disable-extensions").addArguments("disable-infobars").addArguments("--no-sandbox").addArguments("--mute-audio").setLogLevel(ChromeDriverLogLevel.OFF);
+                ChromeOptions chromeDriverOptions = new ChromeOptions().addArguments("--no-sandbox").addArguments("--headless").addArguments("--disable-dev-shm-usage").addArguments("--disable-extensions").addArguments("disable-infobars").addArguments("--mute-audio").setLogLevel(ChromeDriverLogLevel.OFF);
                 ChromeDriver driver = new ChromeDriver(chromeDriverService, chromeDriverOptions);
                 driver.get(url + i + "/");
                 Document document = Jsoup.parse(driver.getPageSource());
