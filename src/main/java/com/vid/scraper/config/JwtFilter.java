@@ -1,0 +1,84 @@
+package com.vid.scraper.config;
+
+import com.vid.scraper.service.TokenService;
+import com.vid.scraper.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Map;
+
+@RequiredArgsConstructor
+public class JwtFilter extends OncePerRequestFilter {
+
+    private final TokenService tokenService;
+    private final UserService userService;
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
+        String token = getTokenFromRequest(request);
+
+        if (token == null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        Map<String, String> userData = tokenService.getUserDataFromToken(token);
+        if (userData == null || userData.isEmpty()) {
+            String body = "{\"status\":false, \"data\": {\"message\":\"Invalid token\", \"code\":6, \"description\":\"INVALID_TOKEN\"}}";
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(body);
+            response.getWriter().flush();
+            response.getWriter().close();
+            return;
+        }
+
+        String userEmail = userData.get("email");
+        String userId = userData.get("id");
+
+        if (userEmail == null || userId == null) {
+            String body = "{\"status\":false, \"data\": {\"message\":\"Invalid token\", \"code\":6, \"description\":\"INVALID_TOKEN\"}}";
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(body);
+            response.getWriter().flush();
+            response.getWriter().close();
+        } else {
+            request.setAttribute("userId", userId);
+            request.setAttribute("username", userEmail);
+            try {
+                UserDetails userDetails = userService.loadUserByUsername(userData.get("email"));
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,
+                        "", userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            } catch (UsernameNotFoundException e) {
+                String body = "{\"status\":false, \"data\": {\"message\":\"Invalid token\", \"code\":6, \"description\":\"INVALID_TOKEN\"}}";
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write(body);
+                response.getWriter().flush();
+                response.getWriter().close();
+            }
+            filterChain.doFilter(request, response);
+        }
+    }
+
+    private String getTokenFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken;
+        }
+        return null;
+    }
+}
