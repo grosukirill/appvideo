@@ -11,7 +11,7 @@ import java.io.File;
 public class ScraperApplication {
 
     public static void main(String[] args) {
-        System.setProperty("webdriver.chrome.driver", "target/classes/chromedriver");
+        System.setProperty("webdriver.chrome.driver", "chromedriver");
         SpringApplication.run(ScraperApplication.class, args);
     }
 
