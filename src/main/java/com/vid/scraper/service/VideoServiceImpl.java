@@ -1,6 +1,5 @@
 package com.vid.scraper.service;
 
-import com.sun.istack.NotNull;
 import com.vid.scraper.exception.UserNotFoundException;
 import com.vid.scraper.exception.VideoNotFoundException;
 import com.vid.scraper.model.PaginationDto;
@@ -35,7 +34,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.Duration;
@@ -57,7 +55,7 @@ public class VideoServiceImpl implements VideoService {
     private final List<String> urls = new ArrayList<>(Arrays.asList("https://wow.yaeby.info/pop-video/", "https://wow.yaeby.info/top-rated/", "https://wwv.sslkn.porn/"));
 
 
-    @Scheduled(fixedRate = 84600000)
+    @Scheduled(cron = "0 2 * * * ?")
     @Async
     public void scrapeVideos() {
         for (String url : this.urls) {
@@ -70,12 +68,15 @@ public class VideoServiceImpl implements VideoService {
         }
     }
 
-    @Scheduled(fixedRate = 84600000)
+    @Scheduled(cron = "0 2 * * * ?")
     @Async
     public void verifyAllVideos() {
         List<Video> videos = videoRepository.findAll();
         for (Video video : videos) {
             if (validateURL(video.getSdUrl()) || validateURL(video.getImageUrl()) || validateURL(video.getHdUrl()) || validateURL(video.getFullHdUrl())) {
+                viewRepository.deleteAllByVideo(video);
+                recommendationViewRepository.deleteAllByVideo(video);
+                likeRepository.deleteAllByVideo(video);
                 videoRepository.delete(video);
             }
         }

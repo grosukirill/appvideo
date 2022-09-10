@@ -11,4 +11,6 @@ import java.util.Optional;
 @Repository
 public interface RecommendationViewRepository extends JpaRepository<RecommendationView, Long> {
     Optional<RecommendationView> findByUserAndVideo(User user, Video video);
+
+    void deleteAllByVideo(Video video);
 }
