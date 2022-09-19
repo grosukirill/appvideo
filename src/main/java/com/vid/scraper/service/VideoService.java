@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 public interface VideoService {
     Response getVideos(Integer page);
 
-    void scrapeVideos();
-
-    void verifyAllVideos();
+//    void scrapeVideos();
+//
+//    void verifyAllVideos();
 
     Response getVideoById(Long videoId, String rawToken);
 

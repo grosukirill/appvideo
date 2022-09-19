@@ -55,32 +55,32 @@ public class VideoServiceImpl implements VideoService {
     private final List<String> urls = new ArrayList<>(Arrays.asList("https://wow.yaeby.info/pop-video/", "https://wow.yaeby.info/top-rated/", "https://wwv.sslkn.porn/"));
 
 
-    @Scheduled(cron = "0 2 * * * ?")
-    @Async
-    public void scrapeVideos() {
-        for (String url : this.urls) {
-            if (url.contains("yaeby")) {
-                extractVideoFromYaeby(url);
-            }
-            if (url.contains("sslkn")) {
-                extractVideoFromSSLKN(url);
-            }
-        }
-    }
-
-    @Scheduled(cron = "0 2 * * * ?")
-    @Async
-    public void verifyAllVideos() {
-        List<Video> videos = videoRepository.findAll();
-        for (Video video : videos) {
-            if (validateURL(video.getSdUrl()) || validateURL(video.getImageUrl()) || validateURL(video.getHdUrl()) || validateURL(video.getFullHdUrl())) {
-                viewRepository.deleteAllByVideo(video);
-                recommendationViewRepository.deleteAllByVideo(video);
-                likeRepository.deleteAllByVideo(video);
-                videoRepository.delete(video);
-            }
-        }
-    }
+//    @Scheduled(cron = "0 2 * * * ?")
+//    @Async
+//    public void scrapeVideos() {
+//        for (String url : this.urls) {
+//            if (url.contains("yaeby")) {
+//                extractVideoFromYaeby(url);
+//            }
+//            if (url.contains("sslkn")) {
+//                extractVideoFromSSLKN(url);
+//            }
+//        }
+//    }
+//
+//    @Scheduled(cron = "0 2 * * * ?")
+//    @Async
+//    public void verifyAllVideos() {
+//        List<Video> videos = videoRepository.findAll();
+//        for (Video video : videos) {
+//            if (validateURL(video.getSdUrl()) || validateURL(video.getImageUrl()) || validateURL(video.getHdUrl()) || validateURL(video.getFullHdUrl())) {
+//                viewRepository.deleteAllByVideo(video);
+//                recommendationViewRepository.deleteAllByVideo(video);
+//                likeRepository.deleteAllByVideo(video);
+//                videoRepository.delete(video);
+//            }
+//        }
+//    }
 
     @Override
     @Transactional
